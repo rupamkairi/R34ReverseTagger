@@ -1,9 +1,12 @@
 {
   "name": "R34ReverseTagger",
   "scripts": {
+    "start": "bun run src/index.ts",
     "dev": "bun run --hot src/index.ts"
   },
   "dependencies": {
+    "axios": "^1.8.4",
+    "cheerio": "^1.0.0",
     "hono": "^4.7.5"
   },
   "devDependencies": {
