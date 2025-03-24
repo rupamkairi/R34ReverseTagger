@@ -26,7 +26,8 @@
   }
 </script>
 
-<main class="container mx-auto">
+<title>Rule34 Reverse Tagger</title>
+<main class="max-w-screen-lg mx-auto px-4 py-8">
   <form
     class="my-4 flex gap-2"
     on:submit={(e) => {
@@ -59,6 +60,7 @@
       readonly
       placeholder="Tags will appear here..."
       class="w-full textarea textarea-success"
+      rows="5"
     ></textarea>
   </div>
 

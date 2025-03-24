@@ -15,10 +15,10 @@ export async function scrape(url: string) {
 
     const tags: string[] = [];
 
-    const copyrightTags = $(R34Tags.copyright).toArray();
-    tags.push(
-      ...copyrightTags.map((tag) => $(tag).find("a").eq(1).text().trim())
-    );
+    // const copyrightTags = $(R34Tags.copyright).toArray();
+    // tags.push(
+    //   ...copyrightTags.map((tag) => $(tag).find("a").eq(1).text().trim())
+    // );
 
     const characterTags = $(R34Tags.character).toArray();
     tags.push(
