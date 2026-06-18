@@ -26,7 +26,7 @@
   }
 </script>
 
-<title>Rule34 Reverse Tagger</title>
+<title>Rule34 Tagger</title>
 <main class="max-w-screen-lg mx-auto px-4 py-8">
   <form
     class="my-4 flex gap-2"
