@@ -8,8 +8,7 @@ declare global {
 		// interface PageState {}
 		interface Platform {
 			env?: {
-				R34_API_KEY?: string;
-				R34_USER_ID?: string;
+				BROWSER?: unknown;
 			};
 		}
 	}

@@ -21,12 +21,10 @@ export const POST: RequestHandler = async (c) => {
     });
   }
 
-  const env = c.platform?.env as Record<string, string> | undefined;
-  const apiKey = env?.R34_API_KEY ?? "";
-  const userId = env?.R34_USER_ID ?? "";
+  const browserBinding = c.platform?.env?.BROWSER;
 
   try {
-    const tags = await scrape(url, apiKey, userId);
+    const tags = await scrape(url, browserBinding);
     return new Response(JSON.stringify({ tags }), {
       headers: { "Content-Type": "application/json" },
     });
