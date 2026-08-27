@@ -6,7 +6,12 @@ declare global {
 		// interface Locals {}
 		// interface PageData {}
 		// interface PageState {}
-		// interface Platform {}
+		interface Platform {
+			env?: {
+				R34_API_KEY?: string;
+				R34_USER_ID?: string;
+			};
+		}
 	}
 }
 

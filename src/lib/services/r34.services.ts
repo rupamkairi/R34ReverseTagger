@@ -1,44 +1,61 @@
-import * as cheerio from "cheerio";
+const API_URL = "https://api.rule34.xxx/index.php";
 
-enum R34Tags {
-  copyright = "li.tag-type-copyright.tag",
-  character = "li.tag-type-character.tag",
-  general = "li.tag-type-general.tag",
-  meta = "li.tag-type-metadata.tag",
-}
+export async function scrape(url: string, apiKey: string, userId: string) {
+  const postId = extractPostId(url);
+  if (!postId) {
+    throw new Error("Could not extract post ID from URL");
+  }
 
-export async function scrape(url: string) {
-  const response = await fetch(url, {
+  if (!apiKey || !userId) {
+    throw new Error("Rule34 API credentials are not configured");
+  }
+
+  const params = new URLSearchParams({
+    page: "dapi",
+    s: "post",
+    q: "index",
+    id: postId,
+    json: "1",
+    fields: "tag_info",
+    api_key: apiKey,
+    user_id: userId,
+  });
+
+  const response = await fetch(`${API_URL}?${params.toString()}`, {
     headers: {
       "User-Agent": "Mozilla/5.0 (compatible; r34-tagger/1.0)",
     },
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch page: ${response.status}`);
+    throw new Error(`Rule34 API request failed: ${response.status}`);
   }
 
-  const html = await response.text();
-  const $ = cheerio.load(html);
+  const data = await response.json();
 
-  const tags: string[] = [];
+  if (typeof data === "string") {
+    throw new Error(`Rule34 API error: ${data}`);
+  }
 
-  // const copyrightTags = $(R34Tags.copyright).toArray();
-  // tags.push(
-  //   ...copyrightTags.map((tag) => $(tag).find("a").eq(1).text().trim())
-  // );
+  const post = Array.isArray(data) ? data[0] : null;
+  if (!post?.tags) {
+    throw new Error("No tags found for this post");
+  }
 
-  const characterTags = $(R34Tags.character).toArray();
-  tags.push(
-    ...characterTags.map((tag) => $(tag).find("a").eq(1).text().trim())
-  );
+  return post.tags.split(" ").join(", ");
+}
 
-  const generalTags = $(R34Tags.general).toArray();
-  tags.push(
-    ...generalTags.map((tag) => $(tag).find("a").eq(1).text().trim())
-  );
+function extractPostId(url: string): string | null {
+  try {
+    const parsed = new URL(url);
+    const id = parsed.searchParams.get("id");
+    if (id && /^\d+$/.test(id)) {
+      return id;
+    }
+  } catch {
+    // fall through to regex fallback
+  }
 
-  // const metaTags = $(R34Tags.meta).toArray();
-
-  return tags.join(", ");
+  const match = url.match(/(?:id=)(\d+)/);
+  return match ? match[1] : null;
 }
